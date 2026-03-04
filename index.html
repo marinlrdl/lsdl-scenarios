@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Propositions Teasers – Les Sons du Lac 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+/* ── Reset & base ───────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{width:100%;height:100%;overflow:hidden}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#0d0e1f;-webkit-font-smoothing:antialiased;color:#ede8ff}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:rgba(182,143,167,.25);border-radius:2px}
+
+/* ── Keyframes ──────────────────────────────────────────── */
+@keyframes morphReveal{
+  from{clip-path:circle(0% at var(--cx,50%) var(--cy,50%))}
+  to  {clip-path:circle(200% at var(--cx,50%) var(--cy,50%))}
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px) scale(.975)}
+  to  {opacity:1;transform:none}
+}
+@keyframes blobDrift{
+  0%,100%{border-radius:62% 38% 46% 54%/60% 44% 56% 40%}
+  33%    {border-radius:38% 62% 60% 40%/40% 58% 42% 60%}
+  66%    {border-radius:54% 46% 38% 62%/50% 36% 64% 50%}
+}
+@keyframes tabIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── Slide system ───────────────────────────────────────── */
+.deck{width:100vw;height:100vh;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;background:#0d0e1f;display:flex;flex-direction:column}
+.slide-morph{animation:morphReveal .7s cubic-bezier(.4,0,.2,1) both}
+
+/* ── Stagger ────────────────────────────────────────────── */
+.stagger>*{animation:fadeUp .5s ease both;opacity:0}
+.stagger>*:nth-child(1){animation-delay:.07s}
+.stagger>*:nth-child(2){animation-delay:.15s}
+.stagger>*:nth-child(3){animation-delay:.23s}
+.stagger>*:nth-child(4){animation-delay:.31s}
+.stagger>*:nth-child(5){animation-delay:.39s}
+.stagger>*:nth-child(6){animation-delay:.47s}
+
+/* ── Blobs ──────────────────────────────────────────────── */
+.blob{position:absolute;pointer-events:none;animation:blobDrift 14s ease-in-out infinite;
+  filter:blur(72px);mix-blend-mode:screen;will-change:transform;
+  transition:transform 1s cubic-bezier(.25,.46,.45,.94)}
+
+/* ── Grain ──────────────────────────────────────────────── */
+.grain::after{content:'';position:absolute;inset:-50%;width:200%;height:200%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.042'/%3E%3C/svg%3E");
+  pointer-events:none;opacity:.55;z-index:1}
+
+/* ── Card ───────────────────────────────────────────────── */
+.card{background:rgba(47,49,99,.38);border:1px solid rgba(182,143,167,.13);
+  border-radius:10px;backdrop-filter:blur(14px);overflow:hidden}
+.card-h{transition:transform .22s ease,box-shadow .22s ease}
+.card-h:hover{transform:translateY(-3px) scale(1.004);box-shadow:0 16px 48px rgba(0,0,0,.45)}
+
+/* ── Badge / Tag ────────────────────────────────────────── */
+.badge,.tag{display:inline-flex;align-items:center;border-radius:999px}
+.badge{padding:4px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.4px;white-space:nowrap}
+.tag{padding:4px 11px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500}
+
+/* ── Tabs ───────────────────────────────────────────────── */
+.tab-list{display:grid;grid-template-columns:1fr 1fr;
+  background:rgba(13,14,31,.82);border:1px solid rgba(182,143,167,.15);
+  border-radius:7px;padding:3px;gap:2px}
+.tab-btn{display:flex;align-items:center;justify-content:center;gap:5px;
+  padding:5px 8px;border-radius:5px;border:none;cursor:pointer;
+  background:transparent;color:#8b82b8;
+  font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;
+  transition:background .2s,color .2s;white-space:nowrap}
+.tab-btn.on-impact{background:#ef834f;color:#111;font-weight:600}
+.tab-btn.on-prestige{background:#d06574;color:#fff;font-weight:600}
+.tab-content{animation:tabIn .28s ease both}
+.tab-hidden{display:none}
+
+/* ── Table ──────────────────────────────────────────────── */
+.ctable{width:100%;border-collapse:separate;border-spacing:0}
+.ctable th{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.7px;padding:11px 14px}
+.ctable td{padding:9px 14px;font-size:11px;line-height:1.55;text-align:center;
+  white-space:pre-line;border-bottom:1px solid rgba(182,143,167,.07)}
+.ctable td:first-child{text-align:left;font-family:'Syne',sans-serif;font-size:10.5px;font-weight:700;color:#8b82b8}
+.ctable tbody tr:hover td{background:rgba(182,143,167,.04)}
+
+/* ── Progress ───────────────────────────────────────────── */
+.progress{position:fixed;top:0;left:0;height:2.5px;z-index:400;
+  transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* ── Nav pill ───────────────────────────────────────────── */
+.nav-pill{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;
+  background:rgba(13,14,31,.84);backdrop-filter:blur(20px);
+  border:1px solid rgba(182,143,167,.16);border-radius:40px;
+  padding:7px 16px;z-index:400}
+.nav-btn{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;
+  background:rgba(47,49,99,.7);color:#ede8ff;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .15s;font-size:17px;line-height:1}
+.nav-btn:hover:not(:disabled){background:#a1536b;transform:scale(1.1)}
+.nav-btn:disabled{opacity:.3;cursor:default;transform:none}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:rgba(182,143,167,.22);
+  cursor:pointer;transition:background .2s,transform .25s}
+.nav-dot.on{transform:scale(1.65)}
+.nav-label{font-family:'DM Mono',monospace;font-size:9px;color:#8b82b8;
+  min-width:82px;text-align:center;letter-spacing:.5px;text-transform:uppercase}
+
+/* ── Misc ───────────────────────────────────────────────── */
+.logo{position:fixed;top:14px;right:18px;z-index:400;
+  font-family:'DM Mono',monospace;font-size:9px;color:rgba(182,143,167,.3);
+  letter-spacing:1.5px;text-transform:uppercase;line-height:1.5;text-align:right}
+.shdr{padding:12px 26px 10px;flex-shrink:0;
+  background:rgba(13,14,31,.72);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(182,143,167,.12)}
+.shdr-t{font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(13px,1.8vw,20px);color:#ede8ff;text-transform:uppercase;letter-spacing:.4px}
+.shdr-s{font-size:10.5px;color:#8b82b8;margin-top:2px}
+.ph{width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:7px;border-radius:6px}
+.ph-name{font-family:'DM Mono',monospace;font-size:9px;color:#8b82b8;
+  word-break:break-all;text-align:center;opacity:.7}
+.ph-type{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(182,143,167,.4);letter-spacing:.3px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback,Fragment}=React;
+
+const T={
+  deep:'#0d0e1f',navy:'#2f3163',mauve:'#b68fa7',pink:'#a1536b',
+  rose:'#d06574',orange:'#ef834f',yellow:'#f8ec64',text:'#ede8ff',
+  sub:'#8b82b8',border:'rgba(182,143,167,.13)',glass:'rgba(13,14,31,.72)',
+};
+
+/* ── SVG icons ───────────────────────────────────────────── */
+const Icon={
+  grid:<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
+  box:<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>,
+  clock:<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+  cam:<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>,
+  arr:<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+  pin:<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
+  film:<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>,
+  clap:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>,
+  grid20:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
+  box20:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>,
+};
+
+/* ── Scene data ─────────────────────────────────────────── */
+const mk=(p,n)=>({img2d:`assets/scenes/${p}_s${n}_2d.png`,img3d:`assets/scenes/${p}_s${n}_3d.png`});
+const S1=[
+  {n:1,tc:'00:00–00:05',title:'ACCROCHE',desc:'Main pose violemment une carte du lac sur une table. Poussière en suspension. Bibliothèque anglaise en fond.',mat:'Sigma 17-50 · 35mm · f/2.8',...mk('short1',1)},
+  {n:2,tc:'00:05–00:12',title:'RÉVÉLATION 3D',desc:'Le lac sort de la carte en 3D. Caméra plonge, révélant le plan du site 2026. Transition réel → 3D.',mat:'Mouvement physique + virtuel · Blend réel/scan 3D',...mk('short1',2)},
+  {n:3,tc:'00:12–00:25',title:'MONTAGE ÉD. 1',desc:'Cuts ultra-rapides sur les meilleurs plans 2025 : drone, scène, public, couleurs chaudes.',mat:'Drone + caméra au sol · Plans variés',...mk('short1',3)},
+  {n:4,tc:'00:25–00:30',title:'RÉVÉLATION DATE',desc:'Retour bibliothèque. Homme réapparaît, doigt sur les lèvres. Titre en overlay : 27 juin 2026.',mat:'Sigma 17-50 · Dézoom progressif · Serré → large',...mk('short1',4)},
+];
+const S2=[
+  {n:1,tc:'00:00–00:20',title:'LE TABLEAU PREND VIE',desc:'Quelqu\'un assis dans un fauteuil. Travelling vers un cadre du lac qui prend vie — plan du site 2026.',mat:'Sigma 17-50 · 35mm · f/5.0 · Tableau visible dès le début',...mk('short2',1)},
+  {n:2,tc:'00:20–00:30',title:'RETOUR À LA RÉALITÉ',desc:'La main attrape l\'objectif pour ramener la scène dans la pièce. Dates et lieu s\'affichent.',mat:'Sigma 10-20 · 10mm · f/3.5 · Plan large / grand angle',...mk('short2',2)},
+];
+const LG=[
+  {n:1,tc:'00:00–00:15',title:'ÉLÉMENT DÉCLENCHEUR',desc:'Membre du bureau sur son canapé. Notif : « L\'édition 1 me manque ». Répond, se lève. Écran noir.',mat:'Sigma 10-20 · f/4.5 · Plan large décor',...mk('long',1)},
+  {n:2,tc:'00:15–00:20',title:'LA CONVOCATION',desc:'Différents membres dans différents lieux reçoivent chacun une notification. Plans se resserrant.',mat:'Sigma 17-50 · f/2.8 · Multi-lieux',...mk('long',2)},
+  {n:3,tc:'00:20–00:50',title:'RÉUNION HOLOGRAPHIQUE',desc:'Membres autour d\'un billard/table. Hologramme 3D du lac. Discussion : scène, navettes, bar, photos.',mat:'BMPCC 4K + Sony A7III · Bentley\'s ou Château de Coussay',...mk('long',3)},
+  {n:4,tc:'00:50–01:00',title:'FINAL & RÉVÉLATION',desc:'Conclusion de réunion. Dates et lieu s\'affichent. Cut sur les meilleurs plans 2025 pour finir fort.',mat:'Plans édition 2025 : drone + caméra au sol',...mk('long',4)},
+];
+
+/* ── Parallax BG ─────────────────────────────────────────── */
+function BG({mouse,tint}){
+  const blobs=[
+    {c:T.pink,  s:500,top:'3%', left:'58%',spd:26,delay:'0s'},
+    {c:T.orange,s:380,top:'60%',left:'5%', spd:17,delay:'5s'},
+    {c:T.rose,  s:310,top:'28%',left:'30%',spd:36,delay:'9s'},
+    {c:tint||T.mauve,s:240,top:'70%',left:'70%',spd:21,delay:'3s'},
+    {c:T.yellow,s:160,top:'8%', left:'14%',spd:13,delay:'7s'},
+  ];
+  return (
+    <div className="grain" style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:0}}>
+      {blobs.map((b,i)=>(
+        <div key={i} className="blob" style={{
+          width:b.s,height:b.s,top:b.top,left:b.left,
+          background:b.c,opacity:.09,animationDelay:b.delay,
+          transform:`translate(calc(-50% + ${mouse.x*b.spd}px),calc(-50% + ${mouse.y*b.spd}px))`,
+        }}/>
+      ))}
+    </div>
+  );
+}
+
+/* ── Scene image with fallback ───────────────────────────── */
+function SceneImg({src, type, accent}) {
+  const [ok, setOk] = useState(false);
+  const [err, setErr] = useState(false);
+  const is2d = type === '2d';
+
+  return (
+    <a href={src} target="_blank" rel="noopener noreferrer" 
+       style={{ width: '100%', display: 'block', position: 'relative', borderRadius: 6, overflow: 'hidden', cursor: 'zoom-in' }}>
+      {!err && (
+        <img 
+          src={src} 
+          alt="" 
+          onLoad={() => setOk(true)} 
+          onError={() => setErr(true)}
+          style={{
+            width: '100%',
+            height: 'auto', // L'image prend sa hauteur naturelle
+            display: 'block',
+            opacity: ok ? 1 : 0,
+            transition: 'opacity .4s ease'
+          }}
+        />
+      )}
+      {(!ok || err) && (
+        <div className="ph" style={{
+          aspectRatio: '16/9', // Ratio par défaut pour le placeholder
+          background: is2d
+            ? 'linear-gradient(135deg,rgba(47,49,99,.55),rgba(13,14,31,.85))'
+            : `linear-gradient(135deg,${accent}18,rgba(13,14,31,.85))`,
+          border: `1px dashed ${is2d ? 'rgba(182,143,167,.22)' : `${accent}44`}`,
+        }}>
+          <span style={{color: is2d ? T.mauve : accent, opacity: .55}}>{is2d ? Icon.grid20 : Icon.box20}</span>
+          <div className="ph-name">{src.split('/').pop()}</div>
+          <div className="ph-type">{is2d ? 'Schéma 2D' : 'Rendu 3D'}</div>
+        </div>
+      )}
+    </a>
+  );
+}
+
+/* ── Scene card ──────────────────────────────────────────── */
+function SceneCard({s, variant}) { // On peut enlever imgH des paramètres
+  const [tab, setTab] = useState('2d');
+  const ac = variant === 'impact' ? T.orange : T.rose;
+  return (
+    <div className="card card-h" style={{height: '100%', display: 'flex', flexDirection: 'column', borderTop: `2px solid ${ac}`}}>
+      {/* ... (Header inchangé) ... */}
+      <div style={{padding: '9px 11px 7px', background: 'rgba(0,0,0,.22)', borderBottom: `1px solid ${T.border}`, flexShrink: 0, display: 'flex', alignItems: 'flex-start', gap: 8}}>
+          {/* Gardez votre code de header ici */}
+      </div>
+
+      {/* Tabs */}
+      <div style={{padding: '7px 9px 0', flexShrink: 0}}>
+        <div className="tab-list">
+          {['2d', '3d'].map(t => (
+            <button key={t} type="button" className={`tab-btn${tab === t ? ` on-${variant}` : ''}`} onClick={() => setTab(t)}>
+              {t === '2d' ? Icon.grid : Icon.box} {t === '2d' ? 'Schéma 2D' : 'Rendu 3D'}
+            </button>
+          ))}
+        </div>
+        {/* Conteneur d'image : on retire la hauteur fixe et on laisse l'image respirer */}
+        <div style={{ marginTop: 6, borderRadius: 6, overflow: 'hidden' }}>
+          <div key={`2d-${tab}`} className={tab === '2d' ? 'tab-content' : 'tab-hidden'}>
+            <SceneImg src={s.img2d} type="2d" accent={ac}/>
+          </div>
+          <div key={`3d-${tab}`} className={tab === '3d' ? 'tab-content' : 'tab-hidden'}>
+            <SceneImg src={s.img3d} type="3d" accent={ac}/>
+          </div>
+        </div>
+      </div>
+      {/* ... (Le reste du Body inchangé) ... */}
+    </div>
+  );
+}
+
+/* ── Slide header ────────────────────────────────────────── */
+function SHdr({title,sub,accent}){
+  return (
+    <div className="shdr" style={{borderTop:`2.5px solid ${accent||T.mauve}`}}>
+      <div className="shdr-t">{title}</div>
+      {sub&&<div className="shdr-s">{sub}</div>}
+    </div>
+  );
+}
+
+/* ── SLIDES ──────────────────────────────────────────────── */
+function Slide_Title({mouse}){
+  return (
+    <div style={{flex:1,position:'relative',display:'flex',alignItems:'center',overflow:'hidden'}}>
+      <BG mouse={mouse} tint={T.rose}/>
+      <div style={{position:'absolute',right:-20,top:'50%',userSelect:'none',lineHeight:1,zIndex:1,
+        fontFamily:"'Syne',sans-serif",fontWeight:800,
+        fontSize:'clamp(80px,17vw,220px)',color:'rgba(255,255,255,.022)',letterSpacing:'-8px',
+        transform:`translate(${mouse.x*18}px,calc(-50% + ${mouse.y*12}px))`,
+        transition:'transform .7s ease'}}>LSDL</div>
+      <div className="stagger" style={{position:'relative',zIndex:2,padding:'0 72px 60px',maxWidth:860}}>
+        <span className="badge" style={{background:`${T.rose}22`,color:T.rose,border:`1px solid ${T.rose}55`}}>
+          Dossier Vidéo — Symphonies Obscures
+        </span>
+        <h1 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,lineHeight:.88,
+          fontSize:'clamp(48px,9vw,104px)',letterSpacing:'-2.5px',marginTop:18}}>
+          <span style={{color:T.text}}>PROPO</span>
+          <span style={{background:`linear-gradient(110deg,${T.orange} 0%,${T.rose} 50%,${T.pink} 100%)`,
+            WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text'}}>-SITIONS</span><br/>
+          <span style={{color:T.text,fontSize:'68%'}}>DE TEASERS</span>
+        </h1>
+        <div style={{width:80,height:2.5,
+          background:`linear-gradient(90deg,${T.orange},${T.pink},transparent)`,margin:'22px 0'}}/>
+        <div style={{fontFamily:"'Syne',sans-serif",fontWeight:600,fontSize:18,color:T.text}}>
+          Les Sons du Lac — 2ème Édition
+        </div>
+        <div style={{fontSize:12.5,color:T.sub,marginTop:6,display:'flex',alignItems:'center',gap:6}}>
+          {Icon.pin} Samedi 27 juin 2026 · Lac de Rabodanges
+        </div>
+      </div>
+      <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'12px 72px',
+        background:'rgba(13,14,31,.65)',backdropFilter:'blur(10px)',
+        fontSize:11,color:T.sub,fontStyle:'italic',zIndex:2}}>
+        Présenté par l'équipe vidéo – Symphonies Obscures
+      </div>
+    </div>
+  );
+}
+
+function Slide_Analyse(){
+  const cols=[
+    {label:'✓ CE QUI EST SOLIDE',col:T.orange,items:[
+      "Intention artistique claire : ton « Burger King », couleurs chaudes, énergie estivale",
+      "2 formats définis : court vertical (30s) et long horizontal (1 min+)",
+      "Matériel listé et pertinent — BMPCC 4K, Sony A7III, DJI Mavic 3 Pro Cine",
+      "Teaser centré sur l'humain (membres du bureau) = fort potentiel d'attachement",
+      "Cible 15–25 ans et réseaux sociaux bien identifiés en amont",
+    ]},
+    {label:'→ CE QUI ÉVOLUE',col:T.rose,items:[
+      "Synopsis trop vague : « réunion + 3D + lac » sans timecodes exploitables",
+      "Pas de découpage scène par scène utilisable pour organiser le tournage",
+      "Aucun lieu de tournage concret validé dans le document original",
+      "Différenciation insuffisante entre les deux formats en termes d'écriture",
+      "Nouvelles propositions : structure, mise en scène et découpage précis apportés",
+    ]},
+  ];
+  return (
+    <Fragment>
+      <SHdr title="Analyse du dossier initial" sub="Ce qui a été posé — ce qui évolue" accent={T.mauve}/>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,
+        padding:'14px 24px 68px',flex:1,minHeight:0}}>
+        {cols.map(c=>(
+          <div key={c.label} className="card" style={{borderTop:`2px solid ${c.col}`}}>
+            <div style={{padding:'14px 16px'}}>
+              <div style={{fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:11,
+                color:c.col,textTransform:'uppercase',letterSpacing:'1px',marginBottom:11}}>{c.label}</div>
+              {c.items.map((item,i)=>(
+                <div key={i} style={{display:'flex',gap:9,alignItems:'flex-start',padding:'5.5px 0',
+                  borderBottom:i<c.items.length-1?`1px solid ${T.border}`:'none'}}>
+                  <span style={{color:c.col,marginTop:2,flexShrink:0}}>{Icon.arr}</span>
+                  <span style={{fontSize:11.5,color:T.text,lineHeight:1.55,opacity:.9}}>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </Fragment>
+  );
+}
+
+function Slide_Formats(){
+  const fmts=[
+    {key:'i',label:'FORMAT IMPACT',dur:'30 secondes · Vertical 9:16',
+     badge:'Cible : 15–25 ans',acc:T.orange,
+     feats:['Réseaux sociaux (Reels, TikTok)','Stop-scrolling immédiat',
+            'Montage ultra-dynamique','Version muette compréhensible','SFX & design sonore fort'],
+     foot:'01 Reveal the Secret · 02 Le Tableau Vivant'},
+    {key:'p',label:'FORMAT PRESTIGE',dur:'1 minute + · Horizontal 16:9',
+     badge:'Cible : 30–50 ans / Partenaires',acc:T.rose,
+     feats:['Approche cinématographique','Storytelling & crédibilité',
+            'Vitrine du savoir-faire','Idéal site web & YouTube','Musique + narration développée'],
+     foot:"01 L'Appel du Public"},
+  ];
+  return (
+    <Fragment>
+      <SHdr title="Notre approche : 2 formats, 2 publics" accent={T.mauve}/>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18,
+        padding:'16px 24px 68px',flex:1}}>
+        {fmts.map(f=>(
+          <div key={f.key} className="card" style={{display:'flex',flexDirection:'column',
+            borderTop:`2px solid ${f.acc}`}}>
+            <div style={{padding:'18px 20px',flex:1,display:'flex',flexDirection:'column',gap:12}}>
+              <div>
+                <div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:21,color:f.acc}}>{f.label}</div>
+                <div style={{fontSize:11.5,color:T.sub,marginTop:3}}>{f.dur}</div>
+                <span className="tag" style={{marginTop:8,background:`${f.acc}20`,
+                  color:f.acc,border:`1px solid ${f.acc}55`,display:'inline-flex'}}>{f.badge}</span>
+              </div>
+              <div style={{flex:1}}>
+                {f.feats.map((feat,i)=>(
+                  <div key={i} style={{display:'flex',gap:8,alignItems:'center',padding:'5.5px 0',
+                    borderBottom:i<f.feats.length-1?`1px solid ${T.border}`:'none',
+                    fontSize:12,color:T.text}}>
+                    <span style={{color:f.acc,flexShrink:0}}>{Icon.arr}</span>{feat}
+                  </div>
+                ))}
+              </div>
+              <div style={{padding:'9px 12px',background:'rgba(0,0,0,.22)',borderRadius:6,
+                fontSize:11,color:f.acc,fontStyle:'italic',display:'flex',alignItems:'center',gap:5}}>
+                {Icon.film}{f.foot}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Fragment>
+  );
+}
+
+function Slide_PropIntro({num,fmtLabel,title,desc,tags,info,accent,mouse}){
+  return (
+    <div style={{flex:1,position:'relative',display:'flex',alignItems:'center',overflow:'hidden'}}>
+      <BG mouse={mouse} tint={accent}/>
+      <div style={{position:'absolute',top:0,left:0,right:0,height:'2.5px',background:accent,zIndex:2}}/>
+      <div className="stagger" style={{position:'relative',zIndex:2,padding:'0 72px 60px',width:'100%',maxWidth:840}}>
+        <span className="badge" style={{background:`${accent}20`,color:accent,border:`1px solid ${accent}55`}}>
+          {fmtLabel}
+        </span>
+        <div style={{fontFamily:"'DM Mono',monospace",fontSize:11,color:T.sub,
+          textTransform:'uppercase',letterSpacing:'1.5px',marginTop:14,marginBottom:6}}>
+          Proposition {num}
+        </div>
+        <h2 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,lineHeight:.88,
+          fontSize:'clamp(36px,6.5vw,80px)',color:T.text,letterSpacing:'-1.5px'}}>
+          {title}
+        </h2>
+        <div style={{width:60,height:2.5,background:accent,margin:'16px 0'}}/>
+        <p style={{fontSize:13,color:T.text,lineHeight:1.75,opacity:.87,maxWidth:680}}>{desc}</p>
+        <div style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:16}}>
+          {tags.map((t,i)=>(
+            <span key={i} className="tag" style={{background:`${t.bg}20`,
+              color:t.bg,border:`1px solid ${t.bg}45`}}>{t.label}</span>
+          ))}
+        </div>
+      </div>
+      {/* Info card */}
+      <div className="card" style={{position:'absolute',right:48,top:'50%',
+        transform:'translateY(-50%)',background:'rgba(13,14,31,.9)',
+        borderTop:`2px solid ${accent}`,width:172,zIndex:2}}>
+        <div style={{padding:'13px 15px'}}>
+          <div style={{fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:10,
+            color:accent,textTransform:'uppercase',letterSpacing:'1px',marginBottom:10}}>Infos clés</div>
+          {info.map((row,i)=>(
+            <div key={i} style={{fontSize:11,color:T.text,padding:'4.5px 0',
+              borderBottom:i<info.length-1?`1px solid ${T.border}`:'none',
+              display:'flex',alignItems:'center',gap:6}}>
+              <div style={{width:3.5,height:3.5,borderRadius:'50%',background:accent,flexShrink:0}}/>
+              {row}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Slide_Scenes({title, sub, scenes, cols, variant}){
+  const ac = variant === 'impact' ? T.orange : T.rose;
+  return (
+    <Fragment>
+      <SHdr title={title} sub={sub} accent={ac}/>
+      <div style={{
+        display: 'grid', 
+        gridTemplateColumns: `repeat(${cols}, 1fr)`,
+        gap: 10, 
+        padding: '10px 20px 68px', 
+        flex: 1, 
+        minHeight: 0, 
+        overflowY: 'auto' // Permet de scroller si les images sont grandes
+      }}>
+        {scenes.map(s => <SceneCard key={s.n} s={s} variant={variant} />)}
+      </div>
+    </Fragment>
+  );
+}
+
+function Slide_Table(){
+  const rows=[
+    ['Format',      'Impact · 30s · 9:16',       'Impact · 30s · 9:16',      'Prestige · 1min+ · 16:9'],
+    ['Cible',       '15–25 ans\nSocial Media',    '15–25 ans\nSocial Media',  '30–50 ans\nPartenaires'],
+    ['Scènes',      '4 scènes',                   '2 scènes',                 '4 scènes'],
+    ['Lieux',       '1 intérieur\n(bibliothèque)','1 intérieur\n(salon)',     '2 lieux\nappart + château'],
+    ['Originalité', '★★★★★\nCarte 3D + mystère',  '★★★★☆\nRupture 4e mur',   '★★★★★\nNarratif + hologramme'],
+    ['Complexité',  'Moyenne\n(FX 3D requis)',     'Simple\n(peu de lieux)',   'Élevée\n(acteurs + lieux)'],
+  ];
+  return (
+    <Fragment>
+      <SHdr title="Récapitulatif des propositions" accent={T.pink}/>
+      <div style={{padding:'12px 24px 68px',flex:1,overflowY:'auto'}}>
+        <table className="ctable">
+          <thead>
+            <tr>
+              <th style={{background:'rgba(47,49,99,.28)',color:T.sub,textAlign:'left'}}/>
+              <th style={{background:`${T.orange}18`,color:T.orange,borderBottom:`2px solid ${T.orange}`}}>Reveal the Secret</th>
+              <th style={{background:`${T.orange}18`,color:T.orange,borderBottom:`2px solid ${T.orange}`}}>Le Tableau Vivant</th>
+              <th style={{background:`${T.rose}18`,color:T.rose,borderBottom:`2px solid ${T.rose}`}}>L'Appel du Public</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(([label,...vals],ri)=>(
+              <tr key={ri}>
+                <td style={{background:'rgba(47,49,99,.18)'}}>{label}</td>
+                {vals.map((v,vi)=>(
+                  <td key={vi} style={{color:v.includes('★')?T.yellow:T.text}}>{v}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Fragment>
+  );
+}
+
+function Slide_Close({mouse}){
+  const steps=[
+    ['01','Validation du scénario','Choisir le(s) format(s) à produire'],
+    ['02','Repérage des lieux','Bibliothèque, château, Bentley\'s…'],
+    ['03','Casting bureau','Confirmer les disponibilités'],
+    ['04','Date de tournage','Fixer le créneau avant juin 2026'],
+    ['05','Post-production & 3D','Montage, intégration, révisions'],
+  ];
+  return (
+    <div style={{flex:1,display:'grid',gridTemplateColumns:'1fr 1fr',minHeight:0}}>
+      <div style={{position:'relative',overflow:'hidden',display:'flex',
+        flexDirection:'column',justifyContent:'center',padding:'52px 46px'}}>
+        <BG mouse={mouse} tint={T.orange}/>
+        <div className="stagger" style={{position:'relative',zIndex:1}}>
+          <h2 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,lineHeight:.9,
+            fontSize:'clamp(32px,5.5vw,60px)',color:T.text}}>ET<br/>MAINTENANT&nbsp;?</h2>
+          <div style={{width:60,height:2.5,background:T.orange,margin:'18px 0 14px'}}/>
+          <p style={{fontSize:13.5,fontStyle:'italic',color:T.mauve,lineHeight:1.65}}>
+            Ensemble faisons vibrer<br/>la Suisse Normande !
+          </p>
+          <div style={{marginTop:26}}>
+            <div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,
+              fontSize:'clamp(18px,2.8vw,30px)',color:T.orange}}>27 JUIN 2026</div>
+            <div style={{fontFamily:"'Syne',sans-serif",fontWeight:500,
+              fontSize:'clamp(12px,1.8vw,17px)',color:T.mauve,marginTop:5,
+              display:'flex',alignItems:'center',gap:6}}>
+              {Icon.pin} Lac de Rabodanges
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style={{background:'rgba(13,14,31,.75)',backdropFilter:'blur(18px)',
+        padding:'38px 42px',display:'flex',flexDirection:'column',
+        borderLeft:`1px solid ${T.border}`}}>
+        <div style={{fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:14,
+          color:T.rose,textTransform:'uppercase',letterSpacing:'1px',marginBottom:14,
+          display:'flex',alignItems:'center',gap:8}}>
+          {Icon.clap} Prochaines étapes
+        </div>
+        {steps.map(([n,title,sub],i)=>(
+          <div key={i} style={{display:'flex',gap:13,alignItems:'flex-start',
+            padding:'11px 0',borderBottom:i<steps.length-1?`1px solid ${T.border}`:'none'}}>
+            <div style={{width:30,height:30,borderRadius:7,flexShrink:0,
+              background:T.orange,color:'#111',
+              display:'flex',alignItems:'center',justifyContent:'center',
+              fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:13}}>{n}</div>
+            <div>
+              <div style={{fontFamily:"'Syne',sans-serif",fontWeight:700,fontSize:13.5,color:T.text}}>{title}</div>
+              <div style={{fontSize:10.5,color:T.sub,fontStyle:'italic',marginTop:2}}>{sub}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── App ─────────────────────────────────────────────────── */
+function App(){
+  const [cur,setCur]=useState(0);
+  const [nxt,setNxt]=useState(null);
+  const [origin,setOrigin]=useState({x:'50%',y:'50%'});
+  const [mouse,setMouse]=useState({x:0,y:0});
+  const busy=useRef(false);
+
+  const onMouse=useCallback(e=>{
+    setMouse({x:e.clientX/window.innerWidth-.5,y:e.clientY/window.innerHeight-.5});
+  },[]);
+
+  const SLIDES=[
+    {label:'Introduction',     accent:T.rose,   el:<Slide_Title mouse={mouse}/>},
+    {label:'Analyse dossier',  accent:T.mauve,  el:<Slide_Analyse/>},
+    {label:'2 Formats',        accent:T.mauve,  el:<Slide_Formats/>},
+    {label:'Impact P1 – Intro',accent:T.orange, el:<Slide_PropIntro num="01"
+      fmtLabel="Format Impact · 30s · 9:16" title="REVEAL THE SECRET" accent={T.orange} mouse={mouse}
+      desc="Un homme dans une bibliothèque type anglais pose violemment une carte du lac de Rabodanges sur une table. La carte prend vie en 3D, révélant la disposition du site 2026. Montage ultra-rapide sur les images de l'édition 1, puis retour bibliothèque : l'homme, doigt sur la bouche, révèle la date."
+      tags={[{label:'Mystérieux',bg:T.orange},{label:'3D immersif',bg:T.mauve},{label:'Rythme rapide',bg:T.rose},{label:'Muet + SFX',bg:T.yellow}]}
+      info={['Durée : 30 sec','Format : 9:16','Scènes : 4','1 intérieur','BMPCC 4K','Sigma 17-50mm']}/>},
+    {label:'Impact P1 – Scènes',accent:T.orange,el:<Slide_Scenes
+      title="REVEAL THE SECRET — DÉCOUPAGE" sub="Format Impact · 30 secondes · 4 scènes"
+      scenes={S1} cols={4} variant="impact" imgH={110}/>},
+    {label:'Impact P2 – Intro', accent:T.orange,el:<Slide_PropIntro num="02"
+      fmtLabel="Format Impact · 30s · 9:16" title="LE TABLEAU VIVANT" accent={T.orange} mouse={mouse}
+      desc="Quelqu'un est assis dans un fauteuil face à un tableau représentant le lac de Rabodanges. Travelling vers le tableau qui prend vie, révélant le plan du site 2026. La main de la personne attrape l'objectif pour ramener la scène dans la pièce. Les dates s'affichent."
+      tags={[{label:'Élégant',bg:T.orange},{label:'Surréaliste',bg:T.mauve},{label:'Rupture 4e mur',bg:T.rose},{label:'Épuré',bg:T.yellow}]}
+      info={['Durée : 30 sec','Format : 9:16','Scènes : 2','1 intérieur','BMPCC 4K','Sigma 17-50mm']}/>},
+    {label:'Impact P2 – Scènes',accent:T.orange,el:<Slide_Scenes
+      title="LE TABLEAU VIVANT — DÉCOUPAGE" sub="Format Impact · 30 secondes · 2 scènes"
+      scenes={S2} cols={2} variant="impact" imgH={148}/>},
+    {label:'Prestige – Intro',  accent:T.rose,  el:<Slide_PropIntro num="01"
+      fmtLabel="Format Prestige · 1 min+ · 16:9" title="L'APPEL DU PUBLIC" accent={T.rose} mouse={mouse}
+      desc="Un membre du bureau reçoit un message d'un fan : « L'édition 1 me manque ». Il convoque tous les membres via notification. Réunis autour d'un billard ou d'une table de château, ils discutent de l'édition 2026 devant un hologramme 3D du lac. Final : révélation de la date avec les plans de l'édition 1."
+      tags={[{label:'Cinématographique',bg:T.rose},{label:'Narratif & humain',bg:T.orange},{label:'Éclairage léché',bg:T.mauve},{label:'Collectif',bg:T.yellow}]}
+      info={['Durée : 1 min+','Format : 16:9','Scènes : 4','2 lieux','BMPCC 4K + A7III',"Château / Bentley's"]}/>},
+    {label:'Prestige – Sc. 1–2',accent:T.rose,  el:<Slide_Scenes
+      title="L'APPEL DU PUBLIC — SCÈNES 1 & 2" sub="Format Prestige · 1 minute · 4 scènes au total"
+      scenes={LG.slice(0,2)} cols={2} variant="prestige" imgH={148}/>},
+    {label:'Prestige – Sc. 3–4',accent:T.rose,  el:<Slide_Scenes
+      title="L'APPEL DU PUBLIC — SCÈNES 3 & 4" sub="Format Prestige · 1 minute · Suite du découpage"
+      scenes={LG.slice(2).map((s,i)=>({...s,n:i+3}))} cols={2} variant="prestige" imgH={148}/>},
+    {label:'Récapitulatif',     accent:T.pink,  el:<Slide_Table/>},
+    {label:'Prochaines étapes', accent:T.pink,  el:<Slide_Close mouse={mouse}/>},
+  ];
+
+  const goTo=useCallback((idx,e)=>{
+    if(busy.current||idx===cur||idx<0||idx>=SLIDES.length)return;
+    const ox=e?.clientX?`${e.clientX}px`:'50%';
+    const oy=e?.clientY?`${e.clientY}px`:'50%';
+    setOrigin({x:ox,y:oy});
+    setNxt(idx);
+    busy.current=true;
+    setTimeout(()=>{setCur(idx);setNxt(null);busy.current=false;},700);
+  },[cur,SLIDES.length]);
+
+  useEffect(()=>{
+    const fn=e=>{
+      if(e.key==='ArrowRight'||e.key===' ')goTo(cur+1);
+      else if(e.key==='ArrowLeft')goTo(cur-1);
+    };
+    window.addEventListener('keydown',fn);
+    return()=>window.removeEventListener('keydown',fn);
+  },[cur,goTo]);
+
+  const ac=SLIDES[cur]?.accent||T.mauve;
+
+  return (
+    <div className="deck" onMouseMove={onMouse}
+      style={{background:`radial-gradient(ellipse at 18% 55%,${T.navy}60 0%,${T.deep} 58%)`}}>
+
+      <div className="progress" style={{
+        width:`${(cur/(SLIDES.length-1))*100}%`,
+        background:`linear-gradient(90deg,${T.pink},${ac})`,
+        boxShadow:`0 0 8px ${ac}80`,
+      }}/>
+
+      <div className="logo">Les Sons<br/>du Lac<br/>2026</div>
+
+      <div className="slide">{SLIDES[cur].el}</div>
+
+      {nxt!==null&&(
+        <div className="slide slide-morph" style={{'--cx':origin.x,'--cy':origin.y,zIndex:50}}>
+          {SLIDES[nxt].el}
+        </div>
+      )}
+
+      <div className="nav-pill">
+        <button className="nav-btn" onClick={e=>goTo(cur-1,e)} disabled={cur===0}>‹</button>
+        <div style={{display:'flex',gap:5,alignItems:'center'}}>
+          {SLIDES.map((_,i)=>(
+            <div key={i} className={`nav-dot${i===cur?' on':''}`}
+              style={{background:i===cur?ac:undefined}}
+              onClick={e=>goTo(i,e)} title={SLIDES[i].label}/>
+          ))}
+        </div>
+        <button className="nav-btn" onClick={e=>goTo(cur+1,e)} disabled={cur===SLIDES.length-1}>›</button>
+        <div className="nav-label">{cur+1} / {SLIDES.length}</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

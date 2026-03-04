@@ -63,95 +63,60 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#0d0e1f;-webkit-font-
 .card-h{transition:transform .22s ease,box-shadow .22s ease}
 .card-h:hover{transform:translateY(-3px) scale(1.004);box-shadow:0 16px 48px rgba(0,0,0,.45)}
 
-/* ── Badge / Tag ────────────────────────────────────────── */
+/* ── UI Elements ────────────────────────────────────────── */
 .badge,.tag{display:inline-flex;align-items:center;border-radius:999px}
 .badge{padding:4px 12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.4px;white-space:nowrap}
 .tag{padding:4px 11px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500}
 
-/* ── Tabs ───────────────────────────────────────────────── */
-.tab-list{display:grid;grid-template-columns:1fr 1fr;
-  background:rgba(13,14,31,.82);border:1px solid rgba(182,143,167,.15);
-  border-radius:7px;padding:3px;gap:2px}
-.tab-btn{display:flex;align-items:center;justify-content:center;gap:5px;
-  padding:5px 8px;border-radius:5px;border:none;cursor:pointer;
-  background:transparent;color:#8b82b8;
-  font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;
-  transition:background .2s,color .2s;white-space:nowrap}
+.tab-list{display:grid;grid-template-columns:1fr 1fr;background:rgba(13,14,31,.82);border:1px solid rgba(182,143,167,.15);border-radius:7px;padding:3px;gap:2px}
+.tab-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;background:transparent;color:#8b82b8;font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;transition:background .2s,color .2s;white-space:nowrap}
 .tab-btn.on-impact{background:#ef834f;color:#111;font-weight:600}
 .tab-btn.on-prestige{background:#d06574;color:#fff;font-weight:600}
 .tab-content{animation:tabIn .28s ease both}
 .tab-hidden{display:none}
 
-/* ── Table ──────────────────────────────────────────────── */
 .ctable{width:100%;border-collapse:separate;border-spacing:0}
-.ctable th{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.7px;padding:11px 14px}
-.ctable td{padding:9px 14px;font-size:11px;line-height:1.55;text-align:center;
-  white-space:pre-line;border-bottom:1px solid rgba(182,143,167,.07)}
+.ctable th{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:11px 14px}
+.ctable td{padding:9px 14px;font-size:11px;line-height:1.55;text-align:center;white-space:pre-line;border-bottom:1px solid rgba(182,143,167,.07)}
 .ctable td:first-child{text-align:left;font-family:'Syne',sans-serif;font-size:10.5px;font-weight:700;color:#8b82b8}
-.ctable tbody tr:hover td{background:rgba(182,143,167,.04)}
 
-/* ── Progress ───────────────────────────────────────────── */
-.progress{position:fixed;top:0;left:0;height:2.5px;z-index:400;
-  transition:width .5s cubic-bezier(.4,0,.2,1)}
+.progress{position:fixed;top:0;left:0;height:2.5px;z-index:400;transition:width .5s cubic-bezier(.4,0,.2,1)}
 
-/* ── Nav pill ───────────────────────────────────────────── */
-.nav-pill{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:10px;
-  background:rgba(13,14,31,.84);backdrop-filter:blur(20px);
-  border:1px solid rgba(182,143,167,.16);border-radius:40px;
-  padding:7px 16px;z-index:400}
-.nav-btn{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;
-  background:rgba(47,49,99,.7);color:#ede8ff;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .2s,transform .15s;font-size:17px;line-height:1}
-.nav-btn:hover:not(:disabled){background:#a1536b;transform:scale(1.1)}
-.nav-btn:disabled{opacity:.3;cursor:default;transform:none}
-.nav-dot{width:5px;height:5px;border-radius:50%;background:rgba(182,143,167,.22);
-  cursor:pointer;transition:background .2s,transform .25s}
+.nav-pill{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:rgba(13,14,31,.84);backdrop-filter:blur(20px);border:1px solid rgba(182,143,167,.16);border-radius:40px;padding:7px 16px;z-index:400}
+.nav-btn{width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;background:rgba(47,49,99,.7);color:#ede8ff;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .15s;font-size:17px;line-height:1}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:rgba(182,143,167,.22);cursor:pointer;transition:background .2s,transform .25s}
 .nav-dot.on{transform:scale(1.65)}
-.nav-label{font-family:'DM Mono',monospace;font-size:9px;color:#8b82b8;
-  min-width:82px;text-align:center;letter-spacing:.5px;text-transform:uppercase}
+.nav-label{font-family:'DM Mono',monospace;font-size:9px;color:#8b82b8;min-width:82px;text-align:center;letter-spacing:.5px;text-transform:uppercase}
 
-/* ── Misc ───────────────────────────────────────────────── */
-.logo{position:fixed;top:14px;right:18px;z-index:400;
-  font-family:'DM Mono',monospace;font-size:9px;color:rgba(182,143,167,.3);
-  letter-spacing:1.5px;text-transform:uppercase;line-height:1.5;text-align:right}
-.shdr{padding:12px 26px 10px;flex-shrink:0;
-  background:rgba(13,14,31,.72);backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(182,143,167,.12)}
-.shdr-t{font-family:'Syne',sans-serif;font-weight:800;
-  font-size:clamp(13px,1.8vw,20px);color:#ede8ff;text-transform:uppercase;letter-spacing:.4px}
+.logo{position:fixed;top:14px;right:18px;z-index:400;font-family:'DM Mono',monospace;font-size:9px;color:rgba(182,143,167,.3);letter-spacing:1.5px;text-transform:uppercase;line-height:1.5;text-align:right}
+.shdr{padding:12px 26px 10px;flex-shrink:0;background:rgba(13,14,31,.72);backdrop-filter:blur(10px);border-bottom:1px solid rgba(182,143,167,.12)}
+.shdr-t{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(13px,1.8vw,20px);color:#ede8ff;text-transform:uppercase;letter-spacing:.4px}
 .shdr-s{font-size:10.5px;color:#8b82b8;margin-top:2px}
-.ph{width:100%;height:100%;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:7px;border-radius:6px}
-.ph-name{font-family:'DM Mono',monospace;font-size:9px;color:#8b82b8;
-  word-break:break-all;text-align:center;opacity:.7}
-.ph-type{font-family:'DM Mono',monospace;font-size:8.5px;color:rgba(182,143,167,.4);letter-spacing:.3px}
+.ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-radius:6px}
 
 /* ── RESPONSIVE OVERRIDES ────────────────────────────────── */
 @media (max-width: 768px) {
-  .deck { overflow: hidden; }
   .logo { display: none; }
   .shdr { padding: 10px 15px; }
-  .nav-pill { bottom: 10px; padding: 5px 10px; width: 90%; justify-content: space-between; }
-  .nav-dot { display: none; } /* On cache les points sur mobile pour laisser la place aux flèches */
-  .nav-label { min-width: auto; font-size: 10px; }
+  .nav-pill { bottom: 10px; width: 90%; }
+  .nav-dot { display: none; }
+  .nav-label { min-width: auto; font-size: 8px; }
   
   /* Grilles adaptatives */
   .responsive-grid { 
     display: flex !important; 
     flex-direction: column !important; 
-    gap: 20px !important; 
+    gap: 15px !important; 
     padding: 10px 15px 100px !important; 
     overflow-y: auto !important; 
+    flex: 1;
   }
   
-  .slide-title-container { padding: 0 20px 80px !important; }
-  .slide-intro-info { position: relative !important; right: auto !important; top: auto !important; transform: none !important; width: 100% !important; margin-top: 20px; }
+  .slide-title-container { padding: 0 24px 80px !important; }
+  .slide-intro-info { position: relative !important; right: auto !important; top: auto !important; transform: none !important; width: 100% !important; margin-top: 20px !important; }
   .close-grid { grid-template-columns: 1fr !important; overflow-y: auto; }
-  .close-grid > div { border: none !important; padding: 30px 20px !important; }
-  .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .close-grid > div { border: none !important; padding: 30px 20px !important; border-bottom: 1px solid rgba(182,143,167,0.1) !important; }
+  .table-container { overflow-x: auto; padding-bottom: 100px !important; }
 }
 </style>
 </head>
@@ -346,6 +311,11 @@ function Slide_Title({mouse}){
           {Icon.pin} Samedi 27 juin 2026 · Lac de Rabodanges
         </div>
       </div>
+      <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'12px 72px',
+        background:'rgba(13,14,31,.65)',backdropFilter:'blur(10px)',
+        fontSize:11,color:T.sub,fontStyle:'italic',zIndex:2}}>
+        Présenté par l'équipe vidéo – Symphonies Obscures
+      </div>
     </div>
   );
 }
@@ -370,7 +340,8 @@ function Slide_Analyse(){
   return (
     <Fragment>
       <SHdr title="Analyse du dossier initial" sub="Ce qui a été posé — ce qui évolue" accent={T.mauve}/>
-      <div className="responsive-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14, padding:'14px 24px 80px',flex:1,minHeight:0}}>
+      <div className="responsive-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,
+        padding:'14px 24px 80px',flex:1,minHeight:0}}>
         {cols.map(c=>(
           <div key={c.label} className="card" style={{borderTop:`2px solid ${c.col}`}}>
             <div style={{padding:'14px 16px'}}>
@@ -407,7 +378,8 @@ function Slide_Formats(){
   return (
     <Fragment>
       <SHdr title="Notre approche : 2 formats, 2 publics" accent={T.mauve}/>
-      <div className="responsive-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18, padding:'16px 24px 80px',flex:1}}>
+      <div className="responsive-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18,
+        padding:'16px 24px 80px',flex:1}}>
         {fmts.map(f=>(
           <div key={f.key} className="card" style={{display:'flex',flexDirection:'column',
             borderTop:`2px solid ${f.acc}`}}>
@@ -465,6 +437,7 @@ function Slide_PropIntro({num,fmtLabel,title,desc,tags,info,accent,mouse}){
           ))}
         </div>
       </div>
+      {/* Info card */}
       <div className="card slide-intro-info" style={{position:'absolute',right:48,top:'50%',
         transform:'translateY(-50%)',background:'rgba(13,14,31,.9)',
         borderTop:`2px solid ${accent}`,width:172,zIndex:2}}>

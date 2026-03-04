@@ -186,41 +186,40 @@ function BG({mouse,tint}){
   );
 }
 
-/* ── Scene image with fallback ───────────────────────────── */
+/* ── Scene image with fallback (Version robuste) ───────────────────────────── */
 function SceneImg({src, type, accent}) {
-  const [ok, setOk] = useState(false);
   const [err, setErr] = useState(false);
   const is2d = type === '2d';
 
   return (
     <a href={src} target="_blank" rel="noopener noreferrer" 
-       style={{ width: '100%', display: 'block', position: 'relative', borderRadius: 6, overflow: 'hidden', cursor: 'zoom-in' }}>
-      {!err && (
+       style={{ width: '100%', display: 'block', position: 'relative', borderRadius: 6, overflow: 'hidden', cursor: 'zoom-in', backgroundColor: 'rgba(0,0,0,0.2)' }}>
+      
+      {!err ? (
         <img 
           src={src} 
           alt="" 
-          onLoad={() => setOk(true)} 
           onError={() => setErr(true)}
           style={{
             width: '100%',
             height: 'auto', 
             display: 'block',
-            opacity: ok ? 1 : 0,
-            transition: 'opacity .4s ease'
+            minHeight: '100px' // Empêche la carte de s'écraser si l'image met du temps à charger
           }}
         />
-      )}
-      {(!ok || err) && (
+      ) : (
+        /* Bloc de secours si l'image est vraiment introuvable */
         <div className="ph" style={{
           aspectRatio: '16/9',
           background: is2d
             ? 'linear-gradient(135deg,rgba(47,49,99,.55),rgba(13,14,31,.85))'
             : `linear-gradient(135deg,${accent}18,rgba(13,14,31,.85))`,
-          border: `1px dashed ${is2d ? 'rgba(182,143,167,.22)' : `${accent}44`}`,
+          border: `1px dashed ${accent}44`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}>
-          <span style={{color: is2d ? T.mauve : accent, opacity: .55}}>{is2d ? Icon.grid20 : Icon.box20}</span>
-          <div className="ph-name">{src.split('/').pop()}</div>
-          <div className="ph-type">{is2d ? 'Schéma 2D' : 'Rendu 3D'}</div>
+          <span style={{color: accent, opacity: .55}}>{is2d ? Icon.grid20 : Icon.box20}</span>
         </div>
       )}
     </a>
